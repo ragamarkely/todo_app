@@ -1,4 +1,3 @@
-<!-- Asynchronous mode -->
 <html>
     <head>
         <title>Todo App</title>
@@ -20,25 +19,26 @@
             {% endfor %}
         </ul>
         <script>
+            const descInput = document.getElementById("description");
             document.getElementById("form").onsubmit = function(e) {
                 e.preventDefault();
+                const desc = descInput.value;
+                descInput.value = "";
                 fetch("/todos/create", {
                     method: "POST", 
                     body: JSON.stringify({
-                        "description": document.getElementById("description").value
+                        "description": desc,
                     }),
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
                     }
                 })
-                .then(function(response) {
-                    return response.json();
-                })
-                .then(function(jsonResponse) {
-                    console.log(jsonResponse);
-                    const liItem = document.createElement("LI");
-                    liItem.innerHTML = jsonResponse["description"];
-                    document.getElementByID("todos").appendChild(liItem);
+                .then(response => response.json())
+                .then(jsonResponse => {
+                    console.log("response", jsonResponse);
+                    li = document.createElement("li");
+                    li.innerText = desc;
+                    document.getElementById("todos").appendChild(li);
                     document.getElementById("error").className = "hidden";
                 })
                 .catch(function() {
