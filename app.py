@@ -1,6 +1,7 @@
 import sys
 
 from flask import Flask, abort, render_template, request, jsonify
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -8,15 +9,16 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://postgres@localhost:5432/todo
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app, session_options={"expire_on_commit": False})
 
+migrate = Migrate(app, db)
+
 class Todo(db.Model):
     __tablename__ = "todos"
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String, nullable=False)
+    completed = db.Column(db.Boolean, nullable=False, default=False)
 
     def __repr__(self):
         return f"<Todo {self.id}, {self.description}>"
-
-db.create_all()
 
 @app.route("/todos/create", methods=["POST"])
 def create_todo():
@@ -39,7 +41,7 @@ def create_todo():
         abort(400)
     else:
         return jsonify({
-            "description": todo.description
+            "description": body["description"]
         })
 
 
