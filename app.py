@@ -1,11 +1,9 @@
 import sys
-from typing import final
 
 from flask import Flask, abort, render_template, request, jsonify
 from flask.helpers import url_for
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import backref
 from werkzeug.utils import redirect
 
 app = Flask(__name__)
