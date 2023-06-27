@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import redirect
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://postgres@localhost:5432/todoapp"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres@localhost:5432/todoapp"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app, session_options={"expire_on_commit": False})
 migrate = Migrate(app, db)
@@ -154,3 +154,7 @@ def get_list_todos(list_id):
 @app.route("/")
 def index():
     return redirect(url_for("get_list_todos", list_id=1))
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
